@@ -1,0 +1,5 @@
+/target
+/static/material-icons
+/pkg
+/release
+Cargo.lock

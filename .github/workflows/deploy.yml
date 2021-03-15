@@ -1,0 +1,37 @@
+name: Deploy 🚀
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Rust Setup
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Cache Deps
+        uses: swatinem/rust-cache@v1
+      - name: Install Deps
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-make
+      - name: Build Release
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: release
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./release
+          commit_message: "🚀 ${{ github.event.head_commit.message }}"

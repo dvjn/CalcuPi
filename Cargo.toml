@@ -1,0 +1,38 @@
+[package]
+version = "0.1.0"
+name = "calcu-pi"
+repository = "https://github.com/divykj/CalcuPi"
+authors = ["Divya Jain <divykjain@gmail.com>"]
+description = "Calculate Pi"
+license = "MIT"
+readme = "./README.md"
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3.18"
+
+[dependencies]
+seed = "0.8.0"
+num-format = "0.4.0"
+
+[dependencies.seed-icons]
+version = "0.4.2"
+features = ["material_icons"]
+
+[dependencies.rand]
+version = "0.8.3"
+features = ["small_rng"]
+
+[build-dependencies]
+seed-icons-gen = "0.3.0"
+
+[profile.release]
+lto = true
+opt-level = 'z'
+codegen-units = 1
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-Os']
