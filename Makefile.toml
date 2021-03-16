@@ -8,7 +8,7 @@ skip_core_tasks = true
 [tasks.watch]
 description = "Watch files and recompile the project on change"
 run_task = [{ name = "build" }]
-watch = true
+watch = { no_git_ignore = true, watch = ["./src/", "Cargo.toml", "build.rs"] }
 
 [tasks.serve]
 description = "Start server"
@@ -36,7 +36,12 @@ args = ["build", "--target", "web", "--out-name", "package"]
 [tasks.release]
 description = "Generate release folder for deployment"
 dependencies = ["build_release"]
-script = "mkdir -p release/pkg && cp -r static/ index.html release/ && cp pkg/package_bg.wasm pkg/package.js release/pkg"
+script_runner = "@shell"
+script = """
+mkdir -p release/pkg
+cp -r static/ index.html release/
+cp pkg/package_bg.wasm pkg/package.js release/pkg
+"""
 
 # ---- LINT ----
 [tasks.clippy]
