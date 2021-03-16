@@ -85,6 +85,10 @@ button.small {
   font-size: 0.75rem;
 }
 
+.spacer {
+  flex: 1;
+}
+
 .horizontal-group {
   display: flex;
 }
