@@ -17,11 +17,32 @@ macro_rules! icon_button {
     };
 }
 
+macro_rules! simulation_speed_button {
+    ($speed:literal, $simulation_speed:ident) => {
+        icon_button![
+            close,
+            $speed,
+            |_| Msg::SetSimulationSpeed($speed),
+            C![
+                "small",
+                if $simulation_speed == $speed {
+                    "primary"
+                } else {
+                    ""
+                }
+            ]
+        ]
+    };
+}
+
 pub fn view(model: &Model) -> Vec<Node<Msg>> {
     nodes![
         main![
             view_header(),
-            view_controls(model.simulation_timer_handle.is_some()),
+            view_controls(
+                model.simulation_timer_handle.is_some(),
+                model.simulation_speed
+            ),
             view_results(model.total_points, model.points_in_circle)
         ],
         div![
@@ -41,7 +62,7 @@ fn view_header() -> Node<Msg> {
     header![h1!["CalcuPi"], h3!["Monte Carlo Method"]]
 }
 
-fn view_controls(is_playing: bool) -> Node<Msg> {
+fn view_controls(is_playing: bool, simulation_speed: usize) -> Node<Msg> {
     div![
         attrs!(At::Id => "controls"),
         h5!["Run Simulation"],
@@ -54,13 +75,17 @@ fn view_controls(is_playing: bool) -> Node<Msg> {
             },
             icon_button![replay, "Reset", |_| Msg::Reset, C!["secondary"]],
         ],
-        h5!["Manually Add Points"],
+        h5!["Simulation Speed"],
         div![
             C!["horizontal-group"],
-            icon_button![add, "1", |_| Msg::AddRandomPoint, C!["small"]],
-            icon_button![add, "10", |_| Msg::AddRandomPoints(10), C!["small"]],
-            icon_button![add, "100", |_| Msg::AddRandomPoints(100), C!["small"]],
-            icon_button![add, "1000", |_| Msg::AddRandomPoints(1000), C!["small"]],
+            simulation_speed_button!(1, simulation_speed),
+            simulation_speed_button!(10, simulation_speed),
+            simulation_speed_button!(100, simulation_speed),
+        ],
+        div![
+            C!["horizontal-group"],
+            simulation_speed_button!(1000, simulation_speed),
+            simulation_speed_button!(10000, simulation_speed),
         ],
     ]
 }

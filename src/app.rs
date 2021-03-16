@@ -10,6 +10,7 @@ pub struct Model {
     pub points_in_circle: usize,
     pub random_generators: (SmallRng, SmallRng),
     pub simulation_timer_handle: Option<StreamHandle>,
+    pub simulation_speed: usize,
     pub canvas: ElRef<HtmlCanvasElement>,
 }
 
@@ -17,6 +18,7 @@ pub struct Model {
 pub enum Msg {
     StartSimulation,
     StopSimulation,
+    SetSimulationSpeed(usize),
     AddRandomPoint,
     AddRandomPoints(usize),
     Reset,
@@ -28,6 +30,7 @@ pub fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
         points_in_circle: 0,
         random_generators: (SmallRng::from_entropy(), SmallRng::from_entropy()),
         simulation_timer_handle: None,
+        simulation_speed: 1,
         canvas: ElRef::default(),
     }
 }
@@ -51,15 +54,24 @@ fn add_random_point(model: &mut Model) {
     }
 }
 
+fn get_simulation_timer_handle(orders: &mut impl Orders<Msg>, speed: usize) -> StreamHandle {
+    orders.stream_with_handle(streams::interval(50, move || Msg::AddRandomPoints(speed)))
+}
+
 pub fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
     match msg {
         Msg::StartSimulation => {
-            model.simulation_timer_handle = Some(
-                orders.stream_with_handle(streams::interval(50, || Msg::AddRandomPoints(100))),
-            );
+            model.simulation_timer_handle =
+                Some(get_simulation_timer_handle(orders, model.simulation_speed));
         }
         Msg::StopSimulation => {
             model.simulation_timer_handle = None;
+        }
+        Msg::SetSimulationSpeed(speed) => {
+            model.simulation_speed = speed;
+            if model.simulation_timer_handle.is_some() {
+                model.simulation_timer_handle = Some(get_simulation_timer_handle(orders, speed));
+            }
         }
         Msg::AddRandomPoint => {
             add_random_point(model);
