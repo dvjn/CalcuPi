@@ -21,7 +21,7 @@ pub fn view(model: &Model) -> Vec<Node<Msg>> {
     nodes![
         main![
             view_header(),
-            view_controls(model.auto_add_timer_handle.is_some()),
+            view_controls(model.simulation_timer_handle.is_some()),
             view_results(model.total_points, model.points_in_circle)
         ],
         div![
@@ -48,19 +48,19 @@ fn view_controls(is_playing: bool) -> Node<Msg> {
         div![
             C!["horizontal-group"],
             if is_playing {
-                icon_button![pause, "Pause", |_| Msg::StopAutoAdd, C!["primary"]]
+                icon_button![pause, "Pause", |_| Msg::StopSimulation, C!["primary"]]
             } else {
-                icon_button![play_arrow, "Play", |_| Msg::StartAutoAdd, C!["primary"]]
+                icon_button![play_arrow, "Play", |_| Msg::StartSimulation, C!["primary"]]
             },
             icon_button![replay, "Reset", |_| Msg::Reset, C!["secondary"]],
         ],
         h5!["Manually Add Points"],
         div![
             C!["horizontal-group"],
-            icon_button![add, "1", |_| Msg::AddPoint, C!["small"]],
-            icon_button![add, "10", |_| Msg::AddTenPoints, C!["small"]],
-            icon_button![add, "100", |_| Msg::AddHundredPoints, C!["small"]],
-            icon_button![add, "1000", |_| Msg::AddThousandPoints, C!["small"]],
+            icon_button![add, "1", |_| Msg::AddRandomPoint, C!["small"]],
+            icon_button![add, "10", |_| Msg::AddRandomPoints(10), C!["small"]],
+            icon_button![add, "100", |_| Msg::AddRandomPoints(100), C!["small"]],
+            icon_button![add, "1000", |_| Msg::AddRandomPoints(1000), C!["small"]],
         ],
     ]
 }

@@ -14,7 +14,7 @@ pub fn draw_point(canvas: &ElRef<HtmlCanvasElement>, x: f64, y: f64, in_circle: 
     ctx.arc(
         x * CANVAS_SIZE + CANVAS_MIDDLE,
         y * CANVAS_SIZE + CANVAS_MIDDLE,
-        CANVAS_SIZE / 200.0,
+        CANVAS_SIZE / 250.0,
         0.0,
         std::f64::consts::PI * 2.0,
     )
