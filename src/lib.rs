@@ -11,25 +11,9 @@ const POINT_COLOR: &str = "#333333";
 const CIRCLE_POINT_COLOR: &str = "#304ffe";
 const FADE_COLOR: &str = "rgba(255, 255, 255, 0.005)";
 
-#[derive(Debug, Clone)]
-struct Coordinate {
-    x: f64,
-    y: f64,
-    in_circle: bool,
-}
-
-impl Coordinate {
-    fn new(x: f64, y: f64) -> Self {
-        Self {
-            x,
-            y,
-            in_circle: x * x + y * y <= 0.25,
-        }
-    }
-}
-
 struct Model {
-    points: Vec<Coordinate>,
+    total_points: usize,
+    points_in_circle: usize,
     generators: (SmallRng, SmallRng),
     auto_add_timer_handle: Option<StreamHandle>,
     canvas: ElRef<HtmlCanvasElement>,
@@ -48,7 +32,8 @@ enum Msg {
 
 fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
     Model {
-        points: vec![],
+        total_points: 0,
+        points_in_circle: 0,
         generators: (SmallRng::from_entropy(), SmallRng::from_entropy()),
         auto_add_timer_handle: None,
         canvas: ElRef::default(),
@@ -56,14 +41,20 @@ fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
 }
 
 fn add_random_point(model: &mut Model) {
-    model.points.push(Coordinate::new(
+    let (x, y) = (
         model.generators.0.gen::<f64>() - 0.5,
         model.generators.1.gen::<f64>() - 0.5,
-    ));
+    );
+    let in_circle = x * x + y * y <= 0.25;
 
-    draw_point(&model.canvas, &model.points[model.points.len() - 1]);
+    model.total_points += 1;
+    if in_circle {
+        model.points_in_circle += 1;
+    }
 
-    if model.points.len() % 100 == 0 {
+    draw_point(&model.canvas, x, y, in_circle);
+
+    if model.total_points % 100 == 0 {
         fade(&model.canvas);
     }
 }
@@ -72,19 +63,19 @@ fn get_current_ctx_2d(canvas: &ElRef<HtmlCanvasElement>) -> CanvasRenderingConte
     canvas_context_2d(&canvas.get().expect("get canvas element"))
 }
 
-fn draw_point(canvas: &ElRef<HtmlCanvasElement>, point: &Coordinate) {
+fn draw_point(canvas: &ElRef<HtmlCanvasElement>, x: f64, y: f64, in_circle: bool) {
     let ctx = get_current_ctx_2d(&canvas);
 
     ctx.begin_path();
     ctx.arc(
-        point.x * CANVAS_SIZE + CANVAS_MIDDLE,
-        point.y * CANVAS_SIZE + CANVAS_MIDDLE,
+        x * CANVAS_SIZE + CANVAS_MIDDLE,
+        y * CANVAS_SIZE + CANVAS_MIDDLE,
         CANVAS_SIZE / 200.0,
         0.0,
         std::f64::consts::PI * 2.0,
     )
     .unwrap();
-    ctx.set_fill_style(&JsValue::from_str(if point.in_circle {
+    ctx.set_fill_style(&JsValue::from_str(if in_circle {
         CIRCLE_POINT_COLOR
     } else {
         POINT_COLOR
@@ -127,8 +118,8 @@ fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             (0..1000).for_each(|_| add_random_point(model));
         }
         Msg::Reset => {
-            model.points.clear();
-            model.points.shrink_to_fit();
+            model.total_points = 0;
+            model.points_in_circle = 0;
             model.generators = (SmallRng::from_entropy(), SmallRng::from_entropy());
             model.auto_add_timer_handle = None;
             clear(&model.canvas);
@@ -141,7 +132,7 @@ fn view(model: &Model) -> Vec<Node<Msg>> {
         main![
             view_header(),
             view_controls(model.auto_add_timer_handle.is_some()),
-            view_results(&model.points)
+            view_results(model.total_points, model.points_in_circle)
         ],
         div![
             attrs!(At::Id => "visualization"),
@@ -194,8 +185,7 @@ fn view_controls(is_playing: bool) -> Node<Msg> {
     ]
 }
 
-fn view_results(points: &[Coordinate]) -> Node<Msg> {
-    let (total_points, points_in_circle) = get_point_counts(&points);
+fn view_results(total_points: usize, points_in_circle: usize) -> Node<Msg> {
     let pi = calculate_pi(total_points, points_in_circle);
 
     div![
@@ -235,13 +225,6 @@ fn view_results(points: &[Coordinate]) -> Node<Msg> {
             ],
         ],
     ]
-}
-
-fn get_point_counts(points: &[Coordinate]) -> (usize, usize) {
-    (
-        points.len(),
-        points.iter().filter(|point| point.in_circle).count(),
-    )
 }
 
 fn calculate_pi(total_points: usize, points_in_circle: usize) -> Option<f64> {
