@@ -206,12 +206,17 @@ fn view_results(points: &[Coordinate]) -> Node<Msg> {
             div![
                 C!["infobox"],
                 caption!["Total Points"],
-                div![total_points.to_formatted_string(&Locale::en)]
+                div![C!["spacer"]],
+                div![span!["S = "], total_points.to_formatted_string(&Locale::en)]
             ],
             div![
                 C!["infobox"],
                 caption!["Inside Circle"],
-                div![points_in_circle.to_formatted_string(&Locale::en)]
+                div![C!["spacer"]],
+                div![
+                    span!["C = "],
+                    points_in_circle.to_formatted_string(&Locale::en)
+                ]
             ],
         ],
         div![
@@ -221,6 +226,7 @@ fn view_results(points: &[Coordinate]) -> Node<Msg> {
                 caption!["Calculated Pi"],
                 match pi {
                     Some(pi) => div![
+                        span!["4*C/S = "],
                         format!("{:.5}", pi,),
                         span![format!("({:+.5})", std::f64::consts::PI - pi)]
                     ],
