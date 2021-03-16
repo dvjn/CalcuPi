@@ -1,11 +1,10 @@
-#![allow(clippy::wildcard_imports)]
-
 use crate::{
     app::{Model, Msg},
     consts::CANVAS_SIZE,
     helpers::calculate_pi,
 };
 use num_format::{Locale, ToFormattedString};
+#[allow(clippy::wildcard_imports)]
 use seed::{prelude::*, *};
 
 macro_rules! icon_button {
