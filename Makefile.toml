@@ -55,8 +55,6 @@ args = [
     "--deny",
     "warnings",
     "--deny",
-    "clippy::pedantic",
-    "--deny",
     "clippy::nursery"
 ]
 
