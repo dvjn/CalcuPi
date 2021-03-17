@@ -83,6 +83,16 @@ button.small {
   font-size: 0.8rem;
 }
 
+button.icon-only {
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
 .infobox {
   background-color: #eeeeee;
   border-radius: 0.5rem;
@@ -221,6 +231,19 @@ main h5 {
 
 #footer-actions {
   align-self: flex-end;
+  display: flex;
+}
+
+#footer-actions button {
+  margin-left: 0.5rem;
+}
+
+#profile-photo {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 2.25rem;
+  background-image: url("https://github.com/divykj.png?size=100");
+  background-size: cover;
 }
 
 #visualization {
