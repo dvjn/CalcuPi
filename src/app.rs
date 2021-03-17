@@ -16,7 +16,6 @@ pub struct Model {
     pub prefers_dark_mode: bool,
 }
 
-#[derive(Copy, Clone)]
 pub enum Msg {
     StartSimulation,
     StopSimulation,
@@ -25,6 +24,7 @@ pub enum Msg {
     AddRandomPoints(usize),
     Reset,
     ToggleDarkMode,
+    OpenUrl(String),
 }
 
 pub fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
@@ -118,6 +118,12 @@ pub fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             model.prefers_dark_mode = !model.prefers_dark_mode;
             reset_simulation(model);
             update_body_class(model.prefers_dark_mode);
+        }
+        Msg::OpenUrl(url) => {
+            window()
+                .unwrap()
+                .open_with_url_and_target(url.as_str(), "")
+                .unwrap();
         }
     }
 }

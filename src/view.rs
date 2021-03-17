@@ -17,11 +17,17 @@ macro_rules! icon {
 }
 
 macro_rules! icon_button {
-    ($icon:literal, $text:expr, $on_click:expr, $($rest:expr),*) => {{
+    ($icon:literal, $text:literal, $on_click:expr, $($rest:expr),*) => {{
         button![icon![$icon], span![$text], ev(Ev::Click, $on_click), $($rest)*]
     }};
-    ($icon:literal, $text:expr, $on_click:expr) => {
+    ($icon:literal, $text:literal, $on_click:expr) => {
         icon_button!($icon, $text, $on_click,)
+    };
+    ($icon:literal, $on_click:expr, $($rest:expr),*) => {
+        button![icon![$icon], C!["icon-only"], ev(Ev::Click, $on_click), $($rest)*]
+    };
+    ($icon:literal, $on_click:expr) => {
+        icon_button!($icon, $on_click,)
     };
 }
 
@@ -156,9 +162,19 @@ fn view_footer(prefers_dark_mode: bool) -> Node<Msg> {
     div![
         attrs!(At::Id => "footer-actions"),
         if prefers_dark_mode {
-            icon_button!["fas fa-sun", "Light Mode", |_| Msg::ToggleDarkMode]
+            icon_button!["fas fa-sun", |_| Msg::ToggleDarkMode]
         } else {
-            icon_button!["fas fa-moon", "Dark Mode", |_| Msg::ToggleDarkMode]
+            icon_button!["fas fa-moon", |_| Msg::ToggleDarkMode]
         },
+        icon_button!["fas fa-code", |_| Msg::OpenUrl(
+            "https://github.com/divykj/CalcuPi/".into()
+        )],
+        button![
+            C!["icon-only"],
+            ev(Ev::Click, |_| {
+                Msg::OpenUrl("https://github.com/divykj".into())
+            }),
+            div![attrs!(At::Id => "profile-photo"),]
+        ],
     ]
 }
