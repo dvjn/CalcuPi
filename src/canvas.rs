@@ -24,11 +24,11 @@ pub const POINT_COLOR: Color = Color {
     light: "#333333",
 };
 pub const CIRCLE_POINT_COLOR: Color = Color {
-    dark: "#001acd",
+    dark: "#5367da",
     light: "#304ffe",
 };
 pub const FADE_COLOR: Color = Color {
-    dark: "rgba(0, 0, 0, 0.0075)",
+    dark: "rgba(0, 0, 0, 0.01)",
     light: "rgba(255, 255, 255, 0.0025)",
 };
 
