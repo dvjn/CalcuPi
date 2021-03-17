@@ -1,4 +1,4 @@
-name: Deploy 🚀
+name: ✅🚀
 on:
   push:
     branches:
@@ -8,7 +8,30 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  test:
+    name: Test ✅
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Rust Setup
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - name: Cache Deps
+        uses: swatinem/rust-cache@v1
+      - name: Install Deps
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: cargo-make
+      - name: Lint
+        uses: actions-rs/cargo@v1
+        with:
+          command: make
+          args: verify
   deploy:
+    name: Deploy 🚀
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
