@@ -7,11 +7,20 @@ use num_format::{Locale, ToFormattedString};
 #[allow(clippy::wildcard_imports)]
 use seed::{prelude::*, *};
 
+macro_rules! icon {
+    ($icon:literal, $($rest:expr),*) => {
+        i![C!["fas", $icon], $($rest)*]
+    };
+    ($icon:literal) => {
+        icon![$icon, ]
+    }
+}
+
 macro_rules! icon_button {
-    ($icon:ident, $text:expr, $on_click:expr, $($rest:expr),*) => {{
-        button![seed_icons::mi::default::$icon::i_c(vec![]), span![$text], ev(Ev::Click, $on_click), $($rest)*]
+    ($icon:literal, $text:expr, $on_click:expr, $($rest:expr),*) => {{
+        button![icon![$icon], span![$text], ev(Ev::Click, $on_click), $($rest)*]
     }};
-    ($icon:ident, $text:expr, $on_click:expr) => {
+    ($icon:literal, $text:expr, $on_click:expr) => {
         icon_button!($icon, $text, $on_click,)
     };
 }
@@ -19,7 +28,7 @@ macro_rules! icon_button {
 macro_rules! simulation_speed_button {
     ($speed:literal, $simulation_speed:ident) => {
         icon_button![
-            close,
+            "fa-times",
             $speed,
             |_| Msg::SetSimulationSpeed($speed),
             C![
@@ -70,11 +79,11 @@ fn view_controls(is_playing: bool, simulation_speed: usize) -> Node<Msg> {
         div![
             C!["horizontal-group"],
             if is_playing {
-                icon_button![pause, "Pause", |_| Msg::StopSimulation, C!["primary"]]
+                icon_button!["fa-pause", "Pause", |_| Msg::StopSimulation, C!["primary"]]
             } else {
-                icon_button![play_arrow, "Play", |_| Msg::StartSimulation, C!["primary"]]
+                icon_button!["fa-play", "Play", |_| Msg::StartSimulation, C!["primary"]]
             },
-            icon_button![replay, "Reset", |_| Msg::Reset, C!["secondary"]],
+            icon_button!["fa-redo-alt", "Reset", |_| Msg::Reset, C!["secondary"]],
         ],
         h5!["Simulation Speed"],
         div![
@@ -137,9 +146,9 @@ fn view_footer(prefers_dark_mode: bool) -> Node<Msg> {
     div![
         attrs!(At::Id => "footer-actions"),
         if prefers_dark_mode {
-            icon_button![brightness_low, "Light Mode", |_| Msg::ToggleDarkMode]
+            icon_button!["fa-sun", "Light Mode", |_| Msg::ToggleDarkMode]
         } else {
-            icon_button![brightness_2, "Dark Mode", |_| Msg::ToggleDarkMode]
+            icon_button!["fa-moon", "Dark Mode", |_| Msg::ToggleDarkMode]
         }
     ]
 }
