@@ -12,7 +12,7 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   text-transform: uppercase;
   vertical-align: middle;
   transition: 0.3s background-color ease, 0.3s box-shadow ease;
@@ -41,9 +41,12 @@ button:active {
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.05);
 }
 
-button .material-icons {
-  margin-right: 0.25em;
-  font-size: 1em;
+button .fas {
+  font-size: 0.9em;
+}
+
+button .fas + span {
+  margin-left: 0.5em;
 }
 
 button.primary {
@@ -76,7 +79,7 @@ button.primary:active {
 }
 
 button.small {
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   font-size: 0.8rem;
 }
 
