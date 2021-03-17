@@ -9,11 +9,11 @@ use seed::{prelude::*, *};
 
 macro_rules! icon {
     ($icon:literal, $($rest:expr),*) => {
-        i![C!["fas", $icon], $($rest)*]
+        i![C![$icon], $($rest)*]
     };
     ($icon:literal) => {
         icon![$icon, ]
-    }
+    };
 }
 
 macro_rules! icon_button {
@@ -28,7 +28,7 @@ macro_rules! icon_button {
 macro_rules! simulation_speed_button {
     ($speed:literal, $simulation_speed:ident) => {
         icon_button![
-            "fa-times",
+            "fas fa-times",
             $speed,
             |_| Msg::SetSimulationSpeed($speed),
             C![
@@ -79,11 +79,21 @@ fn view_controls(is_playing: bool, simulation_speed: usize) -> Node<Msg> {
         div![
             C!["horizontal-group"],
             if is_playing {
-                icon_button!["fa-pause", "Pause", |_| Msg::StopSimulation, C!["primary"]]
+                icon_button![
+                    "fas fa-pause",
+                    "Pause",
+                    |_| Msg::StopSimulation,
+                    C!["primary"]
+                ]
             } else {
-                icon_button!["fa-play", "Play", |_| Msg::StartSimulation, C!["primary"]]
+                icon_button![
+                    "fas fa-play",
+                    "Play",
+                    |_| Msg::StartSimulation,
+                    C!["primary"]
+                ]
             },
-            icon_button!["fa-redo-alt", "Reset", |_| Msg::Reset, C!["secondary"]],
+            icon_button!["fas fa-redo-alt", "Reset", |_| Msg::Reset, C!["secondary"]],
         ],
         h5!["Simulation Speed"],
         div![
@@ -146,9 +156,9 @@ fn view_footer(prefers_dark_mode: bool) -> Node<Msg> {
     div![
         attrs!(At::Id => "footer-actions"),
         if prefers_dark_mode {
-            icon_button!["fa-sun", "Light Mode", |_| Msg::ToggleDarkMode]
+            icon_button!["fas fa-sun", "Light Mode", |_| Msg::ToggleDarkMode]
         } else {
-            icon_button!["fa-moon", "Dark Mode", |_| Msg::ToggleDarkMode]
-        }
+            icon_button!["fas fa-moon", "Dark Mode", |_| Msg::ToggleDarkMode]
+        },
     ]
 }
