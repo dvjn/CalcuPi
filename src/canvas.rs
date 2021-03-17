@@ -8,7 +8,7 @@ pub struct Color<'a> {
 }
 
 impl<'a> Color<'a> {
-    pub fn get(&self, prefers_dark_mode: bool) -> &str {
+    const fn get(&self, prefers_dark_mode: bool) -> &str {
         if prefers_dark_mode {
             self.dark
         } else {
