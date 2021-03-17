@@ -1,6 +1,5 @@
 pub mod app;
 pub mod canvas;
-pub mod consts;
 pub mod helpers;
 pub mod view;
 

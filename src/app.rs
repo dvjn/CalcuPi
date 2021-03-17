@@ -3,7 +3,8 @@ use crate::{
     helpers::is_in_circle,
 };
 use rand::{rngs::SmallRng, Rng, SeedableRng};
-use seed::prelude::{streams, web_sys::HtmlCanvasElement, ElRef, Orders, StreamHandle, Url};
+use seed::prelude::{streams, ElRef, Orders, StreamHandle, Url};
+use web_sys::{window, HtmlCanvasElement};
 
 pub struct Model {
     pub total_points: usize,
@@ -12,6 +13,7 @@ pub struct Model {
     pub simulation_timer_handle: Option<StreamHandle>,
     pub simulation_speed: usize,
     pub canvas: ElRef<HtmlCanvasElement>,
+    pub prefers_dark_mode: bool,
 }
 
 #[derive(Copy, Clone)]
@@ -22,9 +24,19 @@ pub enum Msg {
     AddRandomPoint,
     AddRandomPoints(usize),
     Reset,
+    ToggleDarkMode,
 }
 
 pub fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
+    let prefers_dark_mode = window()
+        .unwrap()
+        .match_media("(prefers-color-scheme: dark)")
+        .unwrap()
+        .unwrap()
+        .matches();
+
+    update_body_class(prefers_dark_mode);
+
     Model {
         total_points: 0,
         points_in_circle: 0,
@@ -32,6 +44,7 @@ pub fn init(_: Url, _: &mut impl Orders<Msg>) -> Model {
         simulation_timer_handle: None,
         simulation_speed: 1,
         canvas: ElRef::default(),
+        prefers_dark_mode,
     }
 }
 
@@ -47,15 +60,34 @@ fn add_random_point(model: &mut Model) {
         model.points_in_circle += 1;
     }
 
-    draw_point(&model.canvas, x, y, in_circle);
+    draw_point(&model.canvas, x, y, in_circle, model.prefers_dark_mode);
 
     if model.total_points % 100 == 0 {
-        fade(&model.canvas);
+        fade(&model.canvas, model.prefers_dark_mode);
     }
 }
 
 fn get_simulation_timer_handle(orders: &mut impl Orders<Msg>, speed: usize) -> StreamHandle {
     orders.stream_with_handle(streams::interval(50, move || Msg::AddRandomPoints(speed)))
+}
+
+fn update_body_class(prefers_dark_mode: bool) {
+    let body = window().unwrap().document().unwrap().body().unwrap();
+    let body_class = body.class_name();
+
+    if prefers_dark_mode {
+        body.set_class_name(format!("{} dark", body_class).as_str());
+    } else {
+        body.set_class_name(body_class.replace("dark", "").as_str());
+    }
+}
+
+fn reset_simulation(model: &mut Model) {
+    model.total_points = 0;
+    model.points_in_circle = 0;
+    model.random_generators = (SmallRng::from_entropy(), SmallRng::from_entropy());
+    model.simulation_timer_handle = None;
+    clear(&model.canvas);
 }
 
 pub fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
@@ -80,11 +112,12 @@ pub fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
             (0..n).for_each(|_| add_random_point(model));
         }
         Msg::Reset => {
-            model.total_points = 0;
-            model.points_in_circle = 0;
-            model.random_generators = (SmallRng::from_entropy(), SmallRng::from_entropy());
-            model.simulation_timer_handle = None;
-            clear(&model.canvas);
+            reset_simulation(model);
+        }
+        Msg::ToggleDarkMode => {
+            model.prefers_dark_mode = !model.prefers_dark_mode;
+            reset_simulation(model);
+            update_body_class(model.prefers_dark_mode);
         }
     }
 }

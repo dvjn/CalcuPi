@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  transition: 0.3s background-color ease, 0.3s color ease;
 }
 
 button {
@@ -18,6 +19,16 @@ button {
   background-color: #eeeeee;
   color: #333333;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dark button,
+.dark .infobox {
+  background-color: #232528;
+  color: #ffffff;
+}
+
+.dark button:hover {
+  background-color: #2e3235;
 }
 
 button:hover {
@@ -50,6 +61,18 @@ button.primary:hover {
 button.primary:active {
   background-color: #0120d2;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0.25);
+}
+
+.dark button.primary {
+  background-color: #001acd;
+}
+
+.dark button.primary:hover {
+  background-color: #0020ee;
+}
+
+.dark button.primary:active {
+  background-color: #0120d2;
 }
 
 button.small {
@@ -107,9 +130,6 @@ button.small {
 }
 
 body {
-  background-image: url("../images/background.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
   min-height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   cursor: default;
@@ -122,10 +142,29 @@ body {
   user-select: none;
 }
 
+body::after {
+  content: "";
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  background-image: url("../images/background.jpg");
+  background-size: cover;
+  transition: 0.3s;
+}
+
+body.dark::after {
+  background-color: #000000;
+  filter: invert(100%) brightness(30%);
+}
+
 #app {
+  z-index: 1;
   border-radius: 2rem;
   width: auto;
-  background: #ffffff;
+  background-color: #ffffff;
   box-shadow: 0 0.46875rem 2.1875rem rgba(0, 0, 0, 0.025),
     0 0.9375rem 1.40625rem rgba(0, 0, 0, 0.025),
     0 0.25rem 0.53125rem rgba(0, 0, 0, 0.03),
@@ -133,6 +172,11 @@ body {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.dark #app {
+  background-color: #17191a;
+  color: #ebe5dd;
 }
 
 main {
@@ -168,6 +212,14 @@ main h5 {
   margin-top: 0.75em;
 }
 
+.dark main h5 {
+  color: rgb(209, 201, 189);
+}
+
+#footer-actions {
+  align-self: flex-end;
+}
+
 #visualization {
   align-self: center;
   background-color: #eeeeee;
@@ -176,6 +228,10 @@ main h5 {
   border-radius: 1rem;
   width: 75vw;
   height: 75vw;
+}
+
+.dark #visualization {
+  background-color: #232528;
 }
 
 canvas {

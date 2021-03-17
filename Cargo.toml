@@ -26,6 +26,17 @@ features = ["material_icons"]
 version = "0.8.3"
 features = ["small_rng"]
 
+[dependencies.web-sys]
+version = "0.3.45"
+features = [
+    'Window',
+    'Document',
+    'Element',
+    'HtmlElement',
+    'Node',
+    'MediaQueryList'
+]
+
 [build-dependencies]
 seed-icons-gen = "0.3.0"
 

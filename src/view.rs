@@ -1,6 +1,6 @@
 use crate::{
     app::{Model, Msg},
-    consts::CANVAS_SIZE,
+    canvas::CANVAS_SIZE,
     helpers::calculate_pi,
 };
 use num_format::{Locale, ToFormattedString};
@@ -42,7 +42,9 @@ pub fn view(model: &Model) -> Vec<Node<Msg>> {
                 model.simulation_timer_handle.is_some(),
                 model.simulation_speed
             ),
-            view_results(model.total_points, model.points_in_circle)
+            view_results(model.total_points, model.points_in_circle),
+            div![C!["spacer"]],
+            view_footer(model.prefers_dark_mode)
         ],
         div![
             attrs!(At::Id => "visualization"),
@@ -128,5 +130,16 @@ fn view_results(total_points: usize, points_in_circle: usize) -> Node<Msg> {
                 }
             ],
         ],
+    ]
+}
+
+fn view_footer(prefers_dark_mode: bool) -> Node<Msg> {
+    div![
+        attrs!(At::Id => "footer-actions"),
+        if prefers_dark_mode {
+            icon_button![brightness_low, "Light Mode", |_| Msg::ToggleDarkMode]
+        } else {
+            icon_button![brightness_2, "Dark Mode", |_| Msg::ToggleDarkMode]
+        }
     ]
 }
