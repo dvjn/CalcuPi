@@ -67,15 +67,16 @@ button.primary:active {
 }
 
 .dark button.primary {
-  background-color: #001acd;
+  background-color: #5367da;
+  color: #111111;
 }
 
 .dark button.primary:hover {
-  background-color: #0020ee;
+  background-color: #6476dd;
 }
 
 .dark button.primary:active {
-  background-color: #0120d2;
+  background-color: #7585e1;
 }
 
 button.small {
