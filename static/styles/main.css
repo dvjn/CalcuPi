@@ -232,6 +232,7 @@ main h5 {
 #footer-actions {
   align-self: flex-end;
   display: flex;
+  margin-top: 0.5rem;
 }
 
 #footer-actions button {
@@ -250,7 +251,7 @@ main h5 {
   align-self: center;
   background-color: #eeeeee;
   margin: 2rem;
-  margin-top: 0;
+  margin-top: 0.5rem;
   border-radius: 1rem;
   width: 75vw;
   height: 75vw;
