@@ -9,7 +9,7 @@ use seed::{prelude::*, *};
 
 macro_rules! icon {
     ($icon:literal, $($rest:expr),*) => {
-        i![C![$icon], $($rest)*]
+        i![C![$icon], $($rest),*]
     };
     ($icon:literal) => {
         icon![$icon, ]
@@ -18,13 +18,13 @@ macro_rules! icon {
 
 macro_rules! icon_button {
     ($icon:literal, $text:literal, $on_click:expr, $($rest:expr),*) => {{
-        button![icon![$icon], span![$text], ev(Ev::Click, $on_click), $($rest)*]
+        button![icon![$icon], span![$text], ev(Ev::Click, $on_click), $($rest),*]
     }};
     ($icon:literal, $text:literal, $on_click:expr) => {
         icon_button!($icon, $text, $on_click,)
     };
     ($icon:literal, $on_click:expr, $($rest:expr),*) => {
-        button![icon![$icon], C!["icon-only"], ev(Ev::Click, $on_click), $($rest)*]
+        button![icon![$icon], C!["icon-only"], ev(Ev::Click, $on_click), $($rest),*]
     };
     ($icon:literal, $on_click:expr) => {
         icon_button!($icon, $on_click,)
