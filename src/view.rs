@@ -12,30 +12,31 @@ macro_rules! icon {
         i![C![$icon], $($rest),*]
     };
     ($icon:literal) => {
-        icon![$icon, ]
+        icon![$icon,]
     };
 }
 
 macro_rules! icon_button {
-    ($icon:literal, $text:literal, $on_click:expr, $($rest:expr),*) => {{
-        button![icon![$icon], span![$text], ev(Ev::Click, $on_click), $($rest),*]
+    ($icon:literal, $text:literal, $title:literal, $on_click:expr, $($rest:expr),*) => {{
+        button![icon![$icon], span![$text], attrs![At::Title => $title], ev(Ev::Click, $on_click), $($rest),*]
     }};
-    ($icon:literal, $text:literal, $on_click:expr) => {
-        icon_button!($icon, $text, $on_click,)
+    ($icon:literal, $text:literal, $title:literal, $on_click:expr) => {
+        icon_button!($icon, $text, $title, $on_click,)
     };
-    ($icon:literal, $on_click:expr, $($rest:expr),*) => {
-        button![icon![$icon], C!["icon-only"], ev(Ev::Click, $on_click), $($rest),*]
+    ($icon:literal, $title:literal, $on_click:expr, $($rest:expr),*) => {
+        button![icon![$icon], C!["icon-only"], attrs![At::Title => $title], ev(Ev::Click, $on_click), $($rest),*]
     };
-    ($icon:literal, $on_click:expr) => {
-        icon_button!($icon, $on_click,)
+    ($icon:literal, $title:literal, $on_click:expr) => {
+        icon_button!($icon, $title, $on_click,)
     };
 }
 
 macro_rules! simulation_speed_button {
-    ($speed:literal, $simulation_speed:ident) => {
+    ($speed:literal, $title:literal, $simulation_speed:ident) => {
         icon_button![
             "fas fa-times",
             $speed,
+            $title,
             |_| Msg::SetSimulationSpeed($speed),
             C![
                 "small",
@@ -88,6 +89,7 @@ fn view_controls(is_playing: bool, simulation_speed: usize) -> Node<Msg> {
                 icon_button![
                     "fas fa-pause",
                     "Pause",
+                    "Pause Simulation",
                     |_| Msg::StopSimulation,
                     C!["primary"]
                 ]
@@ -95,23 +97,30 @@ fn view_controls(is_playing: bool, simulation_speed: usize) -> Node<Msg> {
                 icon_button![
                     "fas fa-play",
                     "Play",
+                    "Play Simulation",
                     |_| Msg::StartSimulation,
                     C!["primary"]
                 ]
             },
-            icon_button!["fas fa-redo-alt", "Reset", |_| Msg::Reset, C!["secondary"]],
+            icon_button![
+                "fas fa-redo-alt",
+                "Reset",
+                "Reset Simulation",
+                |_| Msg::Reset,
+                C!["secondary"]
+            ],
         ],
         h5!["Simulation Speed"],
         div![
             C!["horizontal-group"],
-            simulation_speed_button!(1, simulation_speed),
-            simulation_speed_button!(10, simulation_speed),
-            simulation_speed_button!(100, simulation_speed),
+            simulation_speed_button!(1, "1x speed", simulation_speed),
+            simulation_speed_button!(10, "10x speed", simulation_speed),
+            simulation_speed_button!(100, "100x speed", simulation_speed),
         ],
         div![
             C!["horizontal-group"],
-            simulation_speed_button!(1000, simulation_speed),
-            simulation_speed_button!(10000, simulation_speed),
+            simulation_speed_button!(1000, "1000x speed", simulation_speed),
+            simulation_speed_button!(10000, "10000x speed", simulation_speed),
         ],
     ]
 }
@@ -162,19 +171,20 @@ fn view_footer(prefers_dark_mode: bool) -> Node<Msg> {
     div![
         attrs!(At::Id => "footer-actions"),
         if prefers_dark_mode {
-            icon_button!["fas fa-sun", |_| Msg::ToggleDarkMode]
+            icon_button!["fas fa-sun", "Light Mode", |_| Msg::ToggleDarkMode,]
         } else {
-            icon_button!["fas fa-moon", |_| Msg::ToggleDarkMode]
+            icon_button!["fas fa-moon", "Dark Mode", |_| Msg::ToggleDarkMode,]
         },
-        icon_button!["fas fa-code", |_| Msg::OpenUrl(
+        icon_button!["fas fa-code", "View Source Code", |_| Msg::OpenUrl(
             "https://github.com/divykj/CalcuPi/".into()
-        )],
+        ),],
         button![
             C!["icon-only"],
+            attrs![At::Title => "Divya Jain - Github"],
             ev(Ev::Click, |_| {
                 Msg::OpenUrl("https://github.com/divykj".into())
             }),
-            div![attrs!(At::Id => "profile-photo"),]
+            div![attrs!(At::Id => "profile-photo"),],
         ],
     ]
 }
