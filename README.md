@@ -2,7 +2,7 @@
 
 > Calculate Pi using Monte Carlo method
 
-## Explaination 🤔
+## Explanation 🤔
 
 ### Steps 🎲
 
@@ -33,11 +33,11 @@ Total number of points, **`S`**
 
 Thus,
 <br />
-Area of cicle = **`πr²`**
+Area of circle = **`πr²`**
 <br />
 Area of square = **`4r²`**
 
-For large enough number of random points, we can consider that the ratio of areas of circle to square is equal to the ratio of points inside the cicle to the total number of points, ie, **`πr²/4r² = C/S`**.
+For large enough number of random points, we can consider that the ratio of areas of circle to square is equal to the ratio of points inside the circle to the total number of points, ie, **`πr²/4r² = C/S`**.
 <br />
 Which can be simplified to, **`π = 4*C/S`**
 
