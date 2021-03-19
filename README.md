@@ -2,6 +2,8 @@
 
 > Calculate Pi using Monte Carlo method
 
+Please ⭐ if you like it!
+
 ## Explanation 🤔
 
 ### Steps 🎲
