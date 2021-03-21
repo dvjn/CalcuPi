@@ -1,5 +1,7 @@
-#[allow(clippy::wildcard_imports)]
-use seed::{prelude::*, *};
+use seed::{
+    canvas_context_2d,
+    prelude::{ElRef, JsValue},
+};
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
 pub struct Color<'a> {

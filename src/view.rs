@@ -4,8 +4,11 @@ use crate::{
     helpers::calculate_pi,
 };
 use num_format::{Locale, ToFormattedString};
-#[allow(clippy::wildcard_imports)]
-use seed::{prelude::*, *};
+use seed::{
+    attrs, button, canvas, caption, div, h1, h3, h5, header, i, main, nodes,
+    prelude::{el_ref, ev, px, At, El, Ev, IndexMap, Node, ToClasses, UpdateEl},
+    span, C,
+};
 
 macro_rules! icon {
     ($icon:literal, $($rest:expr),*) => {
