@@ -102,7 +102,9 @@ pub fn update(msg: Msg, model: &mut Model, orders: &mut impl Orders<Msg>) {
         Msg::SetSimulationSpeed(speed) => {
             model.simulation_speed = speed;
             if model.simulation_timer_handle.is_some() {
-                model.simulation_timer_handle = Some(get_simulation_timer_handle(orders, speed));
+                model
+                    .simulation_timer_handle
+                    .replace(get_simulation_timer_handle(orders, speed));
             }
         }
         Msg::AddRandomPoint => {

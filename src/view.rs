@@ -5,7 +5,7 @@ use crate::{
 };
 use num_format::{Locale, ToFormattedString};
 use seed::{
-    attrs, button, canvas, caption, div, h1, h3, h5, header, i, main, nodes,
+    a, attrs, button, canvas, caption, div, h1, h3, h5, header, i, id, main, nodes,
     prelude::{el_ref, ev, px, At, El, Ev, IndexMap, Node, ToClasses, UpdateEl},
     span, C,
 };
@@ -41,14 +41,7 @@ macro_rules! simulation_speed_button {
             $speed,
             $title,
             |_| Msg::SetSimulationSpeed($speed),
-            C![
-                "small",
-                if $simulation_speed == $speed {
-                    "primary"
-                } else {
-                    ""
-                }
-            ]
+            C!["small", ($simulation_speed == $speed).then(|| "primary")]
         ]
     };
 }
@@ -66,7 +59,7 @@ pub fn view(model: &Model) -> Vec<Node<Msg>> {
             view_footer(model.prefers_dark_mode)
         ],
         div![
-            attrs!(At::Id => "visualization"),
+            id!["visualization"],
             canvas![
                 el_ref(&model.canvas),
                 attrs![
@@ -84,7 +77,7 @@ fn view_header() -> Node<Msg> {
 
 fn view_controls(is_playing: bool, simulation_speed: usize) -> Node<Msg> {
     div![
-        attrs!(At::Id => "controls"),
+        id!["controls"],
         h5!["Run Simulation"],
         div![
             C!["horizontal-group"],
@@ -132,7 +125,7 @@ fn view_results(total_points: usize, points_in_circle: usize) -> Node<Msg> {
     let pi = calculate_pi(total_points, points_in_circle);
 
     div![
-        attrs!(At::Id => "results"),
+        id!["results"],
         h5!["Results"],
         div![
             C!["horizontal-group"],
@@ -172,22 +165,21 @@ fn view_results(total_points: usize, points_in_circle: usize) -> Node<Msg> {
 
 fn view_footer(prefers_dark_mode: bool) -> Node<Msg> {
     div![
-        attrs!(At::Id => "footer-actions"),
+        id!["footer-actions"],
         if prefers_dark_mode {
             icon_button!["fas fa-sun", "Light Mode", |_| Msg::ToggleDarkMode,]
         } else {
             icon_button!["fas fa-moon", "Dark Mode", |_| Msg::ToggleDarkMode,]
         },
-        icon_button!["fas fa-code", "View Source Code", |_| Msg::OpenUrl(
-            "https://github.com/divykj/CalcuPi/".into()
-        ),],
-        button![
-            C!["icon-only"],
-            attrs![At::Title => "Divya Jain - Github"],
-            ev(Ev::Click, |_| {
-                Msg::OpenUrl("https://github.com/divykj".into())
-            }),
-            div![attrs!(At::Id => "profile-photo"),],
+        a![
+            C!["button", "icon-only"],
+            attrs![At::Title => "View Source Code", At::Href => "https://github.com/divykj/CalcuPi/"],
+            icon!["fas fa-code"]
+        ],
+        a![
+            C!["button", "icon-only"],
+            attrs![At::Title => "Divya Jain - Github", At::Href => "https://github.com/divykj"],
+            div![id!["profile-photo"]],
         ],
     ]
 }

@@ -19,8 +19,8 @@ impl<'a> Color<'a> {
     }
 }
 
-pub const CANVAS_SIZE: f64 = 1000.0;
-pub const CANVAS_MIDDLE: f64 = CANVAS_SIZE / 2.0;
+pub const CANVAS_SIZE: f64 = 1000.;
+pub const CANVAS_MIDDLE: f64 = CANVAS_SIZE / 2.;
 pub const POINT_COLOR: Color = Color {
     dark: "#eeeeee",
     light: "#333333",
@@ -51,9 +51,9 @@ pub fn draw_point(
     ctx.arc(
         x.mul_add(CANVAS_SIZE, CANVAS_MIDDLE),
         y.mul_add(CANVAS_SIZE, CANVAS_MIDDLE),
-        CANVAS_SIZE / 250.0,
-        0.0,
-        std::f64::consts::PI * 2.0,
+        CANVAS_SIZE / 250.,
+        0.,
+        std::f64::consts::PI * 2.,
     )
     .unwrap();
     ctx.set_fill_style(&JsValue::from_str(if in_circle {
@@ -68,11 +68,11 @@ pub fn fade(canvas: &ElRef<HtmlCanvasElement>, prefers_dark_mode: bool) {
     let ctx = get_current_ctx_2d(canvas);
 
     ctx.set_fill_style(&JsValue::from_str(FADE_COLOR.get(prefers_dark_mode)));
-    ctx.fill_rect(0.0, 0.0, CANVAS_SIZE, CANVAS_SIZE);
+    ctx.fill_rect(0., 0., CANVAS_SIZE, CANVAS_SIZE);
 }
 
 pub fn clear(canvas: &ElRef<HtmlCanvasElement>) {
     let ctx = get_current_ctx_2d(canvas);
 
-    ctx.clear_rect(0.0, 0.0, CANVAS_SIZE, CANVAS_SIZE);
+    ctx.clear_rect(0., 0., CANVAS_SIZE, CANVAS_SIZE);
 }
