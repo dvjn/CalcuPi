@@ -1,4 +1,4 @@
-# **[`CalcuPi 🚀`](https://divykj.github.io/CalcuPi/)**
+# **[`CalcuPi 🚀`](https://dvjn.github.io/CalcuPi/)**
 
 > Calculate Pi using Monte Carlo method
 
